@@ -1,0 +1,12 @@
+﻿{
+    "ConsoleTitle": "Discord Bot - rAthena (2016)",
+    "DiscordToken": "Redacted",
+    "ServerName": "rAthena",
+    "PrefixChar": "/",
+    "AllowMentionPrefix": true,
+    "Channels": {
+        "General": "general",
+        "Support": "support",
+        "Rules": "rules"
+    }
+}

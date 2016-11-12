@@ -1,54 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Discord_rAthenaBot" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
   <Profiles />
-  <Settings>
-    <Setting Name="ConsoleTitle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Discord Bot - rAthena - 2016</Value>
-    </Setting>
-    <Setting Name="ServerName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">rAthena</Value>
-    </Setting>
-    <Setting Name="ChannelGeneral" Type="System.String" Scope="User">
-      <Value Profile="(Default)">general</Value>
-    </Setting>
-    <Setting Name="ChannelRules" Type="System.String" Scope="User">
-      <Value Profile="(Default)">rules</Value>
-    </Setting>
-    <Setting Name="PrefixChar" Type="System.Char" Scope="User">
-      <Value Profile="(Default)">/</Value>
-    </Setting>
-    <Setting Name="AllowMentionPrefix" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="RSSList" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;string&gt;https://rathena.org/board/forum/211-general-support.xml/&lt;/string&gt;
-  &lt;string&gt;https://rathena.org/board/forum/24-installation-support.xml/&lt;/string&gt;
-  &lt;string&gt;https://rathena.org/board/forum/30-scripting-support.xml/&lt;/string&gt;
-  &lt;string&gt;https://rathena.org/board/forum/31-database-support.xml/&lt;/string&gt;
-  &lt;string&gt;https://rathena.org/board/forum/35-source-support.xml/&lt;/string&gt;
-  &lt;string&gt;https://rathena.org/board/forum/40-graphics-support.xml/&lt;/string&gt;
-  &lt;string&gt;https://rathena.org/board/forum/21-web-support.xml/&lt;/string&gt;
-  &lt;string&gt;https://rathena.org/board/forum/19-client-side-support.xml/&lt;/string&gt;
-  &lt;string&gt;https://rathena.org/board/forum/214-third-party-support.xml/&lt;/string&gt;
-  &lt;string&gt;https://rathena.org/board/forum/22-linux-support.xml/&lt;/string&gt;
-&lt;/ArrayOfString&gt;</Value>
-    </Setting>
-    <Setting Name="RSSInterval" Type="System.Int64" Scope="User">
-      <Value Profile="(Default)">1800000</Value>
-    </Setting>
-    <Setting Name="RSSAutoReset" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="RSSEnabled" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="ChannelSupport" Type="System.String" Scope="User">
-      <Value Profile="(Default)">support</Value>
-    </Setting>
-    <Setting Name="Token" Type="System.String" Scope="User">
-      <Value Profile="(Default)">YOUR_CUSTOM_BOT_TOKEN</Value>
-    </Setting>
-  </Settings>
+  <Settings />
 </SettingsFile>

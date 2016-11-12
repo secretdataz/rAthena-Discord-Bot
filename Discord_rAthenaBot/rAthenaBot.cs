@@ -4,8 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.IO;
 using System.Timers;
 using System.Xml;
+using Newtonsoft.Json;
+using Discord.Net;
 
 namespace Discord_rAthenaBot
 {
@@ -13,6 +16,8 @@ namespace Discord_rAthenaBot
     {
         DiscordClient discord;
         CommandService commands;
+        Configuration Config;
+        RSSConfiguration RSSConfig;
         long rssTick = DateTime.Now.Ticks;
 
         private void Log(object sender, LogMessageEventArgs e)
@@ -20,8 +25,26 @@ namespace Discord_rAthenaBot
             Console.WriteLine(e.Message);
         }
 
+        private void FatalError(string Message, int ExitCode = 1)
+        {
+            Console.WriteLine(Message);
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
+            Environment.Exit(ExitCode);
+        }
+
         public rAthenaBot()
         {
+            #region Process configurations
+            Console.WriteLine("Reading configuration files.");
+            var _Result = ProcessConfig();
+            if (!string.IsNullOrEmpty(_Result))
+            {
+                FatalError("Configuration file " + _Result + " is missing.", 0x6E); // ERROR_OPEN_FAILED                
+            }
+            Console.WriteLine("Done reading configuration files.");
+            #endregion
+
             discord = new DiscordClient(x =>
             {
                 x.LogLevel = LogSeverity.Info;
@@ -30,13 +53,13 @@ namespace Discord_rAthenaBot
 
             #region Discord Events - UserJoined
             discord.UserJoined += async (s, e) => {
-                if (e.Server.Name.Equals(Settings.Default.ServerName))
+                if (e.Server.Name.Equals(Config.ServerName))
                 {
-                    var channel = e.Server.FindChannels(Settings.Default.ChannelGeneral).FirstOrDefault();
+                    var channel = e.Server.FindChannels(Config.Channels["General"]).FirstOrDefault();
                     if (channel != null)
                     {
-                        await channel.SendMessage("Hello " + e.User.Mention + ", welcome to " + Settings.Default.ServerName  + " Discord.");
-                        await channel.SendMessage("Kindly read the " + e.Server.FindChannels(Settings.Default.ChannelRules, ChannelType.Text).FirstOrDefault().Mention + " before you start posting. Thank you.");
+                        await channel.SendMessage("Hello " + e.User.Mention + ", welcome to " + Config.ServerName  + " Discord." + Environment.NewLine +
+                            "Kindly read the " + e.Server.FindChannels(Config.Channels["Rules"], ChannelType.Text).FirstOrDefault().Mention + " before you start posting.Thank you.");
                     }
                 }
             };
@@ -45,9 +68,9 @@ namespace Discord_rAthenaBot
             #region Register Commands
             discord.UsingCommands(x =>
             {
-                x.PrefixChar = Settings.Default.PrefixChar;
+                x.PrefixChar = Config.PrefixChar.ElementAt(0);
                 x.HelpMode = HelpMode.Public;
-                x.AllowMentionPrefix = Settings.Default.AllowMentionPrefix;
+                x.AllowMentionPrefix = Config.AllowMentionPrefix;
             });
 
             commands = discord.GetService<CommandService>();
@@ -227,17 +250,39 @@ namespace Discord_rAthenaBot
 
             #region RSS Timer
             Timer rssTimer = new Timer();
-            rssTimer.Interval = Settings.Default.RSSInterval;
-            rssTimer.AutoReset = Settings.Default.RSSAutoReset;
-            rssTimer.Enabled = Settings.Default.RSSEnabled;
+            rssTimer.Interval = RSSConfig.RefreshInterval;
+            rssTimer.AutoReset = RSSConfig.AutoReset;
+            rssTimer.Enabled = RSSConfig.Enabled;
             rssTimer.Elapsed += new ElapsedEventHandler(OnTriggerRSS);
             rssTimer.Start();
             #endregion
 
             discord.ExecuteAndWait(async () =>
             {
-                await discord.Connect(Settings.Default.Token, TokenType.Bot);
+                try
+                {
+                    await discord.Connect(Config.DiscordToken, TokenType.Bot);
+                }catch(HttpException e)
+                {
+                    FatalError("HTTP Error : " + e.Message);
+                }
             });
+        }
+
+        private string ProcessConfig()
+        {
+            var _MainConfigFile = "config.json";
+            var _RSSConfigFile = "config_rss.json";
+            if (!File.Exists(_MainConfigFile))
+            {
+                return _MainConfigFile;
+            } else if (!File.Exists(_RSSConfigFile))
+            {
+                return _RSSConfigFile;
+            }
+            Config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(_MainConfigFile));
+            RSSConfig = JsonConvert.DeserializeObject<RSSConfiguration>(File.ReadAllText(_RSSConfigFile));
+            return null;
         }
 
         #region Rich Site Summary 
@@ -253,14 +298,14 @@ namespace Discord_rAthenaBot
         {
             discord.ExecuteAndWait(async () =>
             {
-                Channel channel = discord.FindServers(Settings.Default.ServerName).FirstOrDefault().FindChannels(Settings.Default.ChannelSupport,ChannelType.Text).FirstOrDefault();
+                Channel channel = discord.FindServers(Config.ServerName).FirstOrDefault().FindChannels(Config.Channels["Support"],ChannelType.Text).FirstOrDefault();
 
                 if (channel != null)
                 {
-                    if (Settings.Default.RSSList.Count > 0)
+                    if (RSSConfig.Feeds.Count > 0)
                     {
                         List<Tuple<string, string, long>> newRSS = new List<Tuple<string, string, long>>();
-                        var rssList = Settings.Default.RSSList;
+                        var rssList = RSSConfig.Feeds;
 
                         #region Search for New RSS
                         foreach (var rss in rssList)

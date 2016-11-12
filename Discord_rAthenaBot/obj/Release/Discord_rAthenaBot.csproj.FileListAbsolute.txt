@@ -1,1 +1,0 @@
-R:\GitHub\rAthena-Discord-Bot\Discord_rAthenaBot\bin\Release\Discord_rAthenaBot.exe.config
