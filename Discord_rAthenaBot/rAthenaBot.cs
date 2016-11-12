@@ -9,15 +9,19 @@ using System.Timers;
 using System.Xml;
 using Newtonsoft.Json;
 using Discord.Net;
+using Discord_rAthenaBot.DivinePride;
 
 namespace Discord_rAthenaBot
 {
     partial class rAthenaBot
     {
+        public static rAthenaBot instance { get; private set; }
         DiscordClient discord;
         CommandService commands;
-        Configuration Config;
+        public Configuration Config { get; private set; }
         RSSConfiguration RSSConfig;
+        DivinePrideService DpService;
+
         long rssTick = DateTime.Now.Ticks;
 
         private void Log(object sender, LogMessageEventArgs e)
@@ -44,6 +48,7 @@ namespace Discord_rAthenaBot
             }
             Console.WriteLine("Done reading configuration files.");
             Console.Title = Config.ConsoleTitle;
+            DpService = new DivinePrideService { BaseUrl = Config.DivinePrideBaseUrl, ApiKey = Config.DivinePrideApiKey };
             #endregion
 
             discord = new DiscordClient(x =>
@@ -241,8 +246,23 @@ namespace Discord_rAthenaBot
                     }
                     else
                     {
-                        string divinepride = "www.divine-pride.net/database/monster/" + id;
-                        Process.Start(divinepride);
+                        var mob = DpService.GetMonster(id);
+                        if (mob == null)
+                        {
+                            await e.Channel.SendMessage("Can't retrieve monster info from divine-pride. Either mob-id doesn't exist or divine-pride is down.");
+                        }
+                        else
+                        {
+                            var template = "Monster info for monster **{0} ({1})** :" + Environment.NewLine +
+                                                "Stats: Lv:{2} HP:{3} SP:{4} STR:{5} AGI:{6} VIT:{7} INT:{8} DEX:{9} LUK:{10}" + Environment.NewLine +
+                                                "Attack: {11}-{12} Def:{13} Mdef:{14} Exp:{15} JobExp:{16} Hit:{17} Flee:{18}" + Environment.NewLine +
+                                                "Race:{19} Size:{20} Element:{21} MVP:{22}" + Environment.NewLine +
+                                                "**Drops**: WIP";
+                            await e.Channel.SendMessage(string.Format(template, mob.name, mob.kROName, mob.stats.level, mob.stats.health, mob.stats.sp,
+                                mob.stats.str, mob.stats.agi, mob.stats.vit, mob.stats.Int, mob.stats.dex, mob.stats.luk, mob.stats.attack["minimum"], mob.stats.attack["maximum"],
+                                mob.stats.defense, mob.stats.magicDefense, mob.stats.baseExperience, mob.stats.jobExperience, mob.stats.hit, mob.stats.flee, Monster.Idx2Race(mob.stats.race), Monster.Idx2Size(mob.stats.scale),
+                                "WIP", mob.stats.mvp == 1 ? "Yes" : "No")); // TODO : Implement Element
+                        }
                     }
                 });
             #endregion
@@ -258,6 +278,7 @@ namespace Discord_rAthenaBot
             rssTimer.Start();
             #endregion
 
+            instance = this;
             discord.ExecuteAndWait(async () =>
             {
                 try

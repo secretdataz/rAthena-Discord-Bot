@@ -11,5 +11,7 @@ namespace Discord_rAthenaBot
         public string PrefixChar { get; set; }
         public bool AllowMentionPrefix { get; set; }
         public Dictionary<String,String> Channels { get; set; }
+        public string DivinePrideApiKey { get; set; }
+        public string DivinePrideBaseUrl { get; set; }
     }
 }

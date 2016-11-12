@@ -8,5 +8,7 @@
         "General": "general",
         "Support": "support",
         "Rules": "rules"
-    }
+    },
+    "DivinePrideApiKey": "Redacted",
+    "DivinePrideBaseUrl": "http://www.divine-pride.net/api/database/{1}/{2}?apiKey={0}"
 }

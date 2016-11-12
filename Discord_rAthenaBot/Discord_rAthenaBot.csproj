@@ -108,6 +108,8 @@
   <ItemGroup>
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="Config\RSSConfiguration.cs" />
+    <Compile Include="DivinePride\DivinePrideService.cs" />
+    <Compile Include="DivinePride\Monster.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="rAthenaBot.cs" />
