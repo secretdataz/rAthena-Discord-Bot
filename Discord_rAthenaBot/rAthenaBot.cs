@@ -267,7 +267,36 @@ namespace Discord_rAthenaBot
                 });
             #endregion
 
-            #endregion 
+            #region Command - Divine-Pride to rAthena Monster DB
+            commands.CreateCommand("ramob")
+                .Description("This command will return information of a monster in rAthena's mob_db.txt format. ```Usage: /ramob <MonsterID>```")
+                .Parameter("arg", ParameterType.Required)
+                .Do(async (e) =>
+                {
+                    int id = Convert.ToInt32(e.Args[0]);
+                    await e.Channel.SendIsTyping();
+                    if (id <= 0)
+                    {
+                        await e.Channel.SendMessage(e.Command.Description);
+                    }
+                    else
+                    {
+                        var mob = DpService.GetMonster(id);
+                        if (mob == null)
+                        {
+                            await e.Channel.SendMessage("Can't retrieve monster info from divine-pride. Either mob-id doesn't exist or divine-pride is down.");
+                        }
+                        else
+                        {
+                            var str = mob.ToAthenaFormat();
+                            Console.WriteLine(str);
+                            await e.Channel.SendMessage("`" + str + "`");
+                        }
+                    }
+                });
+            #endregion
+
+            #endregion
 
             #region RSS Timer
             Timer rssTimer = new Timer();
