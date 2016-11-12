@@ -6,7 +6,6 @@ namespace Discord_rAthenaBot
     {
         static void Main(string[] args)
         {
-            Console.Title = Settings.Default.ConsoleTitle;
             rAthenaBot bot = new rAthenaBot();
         }
     }

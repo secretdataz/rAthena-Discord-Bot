@@ -43,6 +43,7 @@ namespace Discord_rAthenaBot
                 FatalError("Configuration file " + _Result + " is missing.", 0x6E); // ERROR_OPEN_FAILED                
             }
             Console.WriteLine("Done reading configuration files.");
+            Console.Title = Config.ConsoleTitle;
             #endregion
 
             discord = new DiscordClient(x =>
