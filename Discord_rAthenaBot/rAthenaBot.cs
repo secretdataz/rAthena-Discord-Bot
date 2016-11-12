@@ -288,9 +288,7 @@ namespace Discord_rAthenaBot
                         }
                         else
                         {
-                            var str = mob.ToAthenaFormat();
-                            Console.WriteLine(str);
-                            await e.Channel.SendMessage("`" + str + "`");
+                            await e.Channel.SendMessage("`" + mob.ToAthenaFormat() + "`");
                         }
                     }
                 });
