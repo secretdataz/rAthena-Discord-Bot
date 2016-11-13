@@ -1,7 +1,7 @@
 ﻿{
     "Enabled": true,
     "AutoReset": true,
-    "RefreshInterval": 1800000,
+    "RefreshInterval": 600000,
     "Feeds": [
         "https://rathena.org/board/forum/211-general-support.xml/",
         "https://rathena.org/board/forum/24-installation-support.xml/",
