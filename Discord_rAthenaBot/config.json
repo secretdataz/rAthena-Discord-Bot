@@ -1,6 +1,6 @@
 ﻿{
     "ConsoleTitle": "Discord Bot - rAthena (2016)",
-    "DiscordToken": "Redacted",
+    "DiscordToken": "MjQzNzYwNDgyMjgyODk3NDA4.CwojkA.JqTcw0h6njjoVc05GZlPaRnOxy8",
     "ServerName": "rAthena",
     "PrefixChar": "/",
     "AllowMentionPrefix": true,
@@ -9,6 +9,6 @@
         "Support": "support",
         "Rules": "rules"
     },
-    "DivinePrideApiKey": "Redacted",
+    "DivinePrideApiKey": "89fa90907f8749f1ffecdc47e9ec563e",
     "DivinePrideBaseUrl": "http://www.divine-pride.net/api/database/{1}/{2}?apiKey={0}"
 }
