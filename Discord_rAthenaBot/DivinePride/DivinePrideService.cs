@@ -1,10 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Discord_rAthenaBot.DivinePride
 {
@@ -15,7 +10,7 @@ namespace Discord_rAthenaBot.DivinePride
 
         public string GetData(string type, int id)
         {
-            var url = string.Format(BaseUrl, ApiKey, type, id);
+            string url = string.Format(BaseUrl, ApiKey, type, id);
             using(WebClient wc = new WebClient())
             {               
                 return wc.DownloadString(url);
@@ -24,10 +19,11 @@ namespace Discord_rAthenaBot.DivinePride
 
         public Monster GetMonster(int id)
         {
-            try {
-                var mob = JsonConvert.DeserializeObject<Monster>(GetData("Monster", id));
-                return mob;
-            } catch(WebException e)
+            try
+            {
+                return JsonConvert.DeserializeObject<Monster>(GetData("Monster", id));
+            }
+            catch (WebException)
             {
                 return null;
             }

@@ -29,7 +29,7 @@ namespace Discord_rAthenaBot
             Console.WriteLine(e.Message);
         }
 
-        private void FatalError(string Message, int ExitCode = 1)
+        public void FatalError(string Message, int ExitCode = 1)
         {
             Console.WriteLine(Message);
             Console.WriteLine("Press any key to exit.");
@@ -101,8 +101,7 @@ namespace Discord_rAthenaBot
                         else
                         {
                             string query = String.Join("+", e.Args.ToList());
-                        // string url = "www.google.com/?#newwindow=1&safe=off&q=rathena.org+" + query;
-                        string url = "cse.google.com/cse/publicurl?cx=009409555530237933087:hphsio1cods&q=" + query;
+                            string url = "cse.google.com/cse/publicurl?cx=009409555530237933087:hphsio1cods&q=" + query;
                             await e.Channel.SendMessage("Search result: `" + String.Join(" ", e.Args.ToList()) + "`" + System.Environment.NewLine + "https://" + url);
                             Process.Start(url);
                         }
@@ -138,23 +137,8 @@ namespace Discord_rAthenaBot
                                     if (!String.IsNullOrEmpty(author))
                                     {
                                         msg = msg.Where(x => x.User.Mention.Equals(author)).ToArray();
-                                        await e.Channel.DeleteMessages(msg);
-                                    //await e.Channel.SendIsTyping();
-                                    //if (msg.Length > 1)
-                                    //{
-                                    //    await e.Channel.SendMessage(e.Message.User.Name + " removed " + author + "'s " + (msg.Length - 1) + " chat(s).");
-                                    //}
-                                }
-                                    else
-                                    {
-                                        await e.Channel.DeleteMessages(msg);
-                                    //await e.Channel.SendIsTyping();
-                                    //if (msg.Length > 1)
-                                    //{
-                                    //    await e.Channel.SendMessage(e.Message.User.Name + " removed " + (msg.Length - 1) + " chat(s).");
-                                    //}
-                                }
-
+                                    }
+                                    await e.Channel.DeleteMessages(msg);
                                 }
                             }
                         }
@@ -188,7 +172,7 @@ namespace Discord_rAthenaBot
                             }
                             else
                             {
-                                user = e.Channel.FindUsers(username, true).FirstOrDefault();
+                                user = e.Channel.FindUsers(username).FirstOrDefault();
                             }
                         }
 
@@ -201,7 +185,7 @@ namespace Discord_rAthenaBot
                         {
                             string msg = "```"
                                         + "Name: " + user.Name + " (" + user.ToString() + ")" + System.Environment.NewLine
-                                        + "Role: " + String.Join(",", e.User.Roles.Select(x => x.Name)) + System.Environment.NewLine
+                                        + "Role: " + String.Join(",", user.Roles.Select(x => x.Name)) + System.Environment.NewLine
                                         + "Joined Since: " + user.JoinedAt + System.Environment.NewLine
                                         + "Last Activity: " + user.LastActivityAt + System.Environment.NewLine
                                         + "Last Online At: " + user.LastOnlineAt + System.Environment.NewLine
@@ -297,6 +281,19 @@ namespace Discord_rAthenaBot
                     });
                 #endregion
 
+                #region Command - Member
+                commands.CreateCommand("emistry")
+                    .Do(async (e) =>
+                    {
+                        await e.Channel.SendMessage("I am the Emperor!! Obey Me or Die!");
+                        await e.Channel.SendFile( @"img\emistry.gif" );
+                    });
+                commands.CreateCommand("aleos")
+                    .Do(async (e) =>
+                    {
+                        await e.Channel.SendFile(@"img\aleos.gif");
+                    });
+                #endregion
                 #endregion
 
                 #region RSS Timer
@@ -388,7 +385,7 @@ namespace Discord_rAthenaBot
                         {
                             await channel.SendIsTyping();
 
-                            string msg = "**" + newRSS.Count + " New Topic(s): **";
+                            string msg = "**I've found " + newRSS.Count + " New Topic(s), anybody want to take a look at it? **";
                             foreach (Tuple<string,string,long> rss in newRSS)
                             {
                                 msg = msg + System.Environment.NewLine

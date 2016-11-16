@@ -17,7 +17,7 @@ namespace Discord_rAthenaBot
             else
             {
                 Console.WriteLine("Application already running. Please close the existing application.");
-                Console.WriteLine("Press any key to exit.");
+                Console.WriteLine("Press any key to exit...");
                 Console.ReadKey();
                 Environment.Exit(1);
             }
