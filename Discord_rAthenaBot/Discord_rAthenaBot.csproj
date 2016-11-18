@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="Config\RSSConfiguration.cs" />
+    <Compile Include="Const\rss.cs" />
     <Compile Include="DivinePride\DivinePrideService.cs" />
     <Compile Include="DivinePride\Item.cs" />
     <Compile Include="DivinePride\Item.p.cs" />

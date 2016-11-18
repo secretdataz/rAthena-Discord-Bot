@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.Net;
+using Discord_rAthenaBot.Const;
 using Discord_rAthenaBot.DivinePride;
 using Newtonsoft.Json;
 using System;
@@ -346,14 +347,6 @@ namespace Discord_rAthenaBot
         }
 
         #region Rich Site Summary 
-        enum RSSItemType {
-            Title = 0,
-            Link = 1,
-            Description = 2,
-            GUID = 3,
-            pubDate = 4
-        }
-
         private void OnTriggerRSS(object source, ElapsedEventArgs e)
         {
             discord.ExecuteAndWait(async () =>
@@ -376,12 +369,12 @@ namespace Discord_rAthenaBot
                             for (int i = 0; i < elemList.Count; i++)
                             {
                                 XmlNodeList node = elemList[i].ChildNodes;
-                                long timetick = DateTime.Parse(node[(byte)RSSItemType.pubDate].InnerText).Ticks;
+                                long timetick = DateTime.Parse(node[(byte)Constant.RSSItemType.PublishDate].InnerText).Ticks;
                                 if (timetick > rssTick)
                                 {
                                     newRSS.Add(new Tuple<string, string, long>(
-                                        node[(byte)RSSItemType.Title].InnerText,
-                                        node[(byte)RSSItemType.Link].InnerText,
+                                        node[(byte)Constant.RSSItemType.Title].InnerText,
+                                        node[(byte)Constant.RSSItemType.Link].InnerText,
                                         timetick));
                                 }
                             }
