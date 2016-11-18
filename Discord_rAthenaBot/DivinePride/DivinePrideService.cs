@@ -35,8 +35,7 @@ namespace Discord_rAthenaBot.DivinePride
         {
             try
             {
-                string json_text = GetData("Item", id);
-                return JsonConvert.DeserializeObject<Item>(json_text);
+                return JsonConvert.DeserializeObject<Item>(GetData("Item", id));
             }
             catch (Exception e)
             {
