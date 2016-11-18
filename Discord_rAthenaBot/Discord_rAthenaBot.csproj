@@ -109,13 +109,18 @@
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="Config\RSSConfiguration.cs" />
     <Compile Include="DivinePride\DivinePrideService.cs" />
+    <Compile Include="DivinePride\Item.cs" />
+    <Compile Include="DivinePride\Item.p.cs" />
     <Compile Include="DivinePride\Monster.cs" />
+    <Compile Include="DivinePride\Monster.p.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="rAthenaBot.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="config_rss.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

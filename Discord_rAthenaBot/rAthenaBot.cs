@@ -196,10 +196,10 @@ namespace Discord_rAthenaBot
                     });
                 #endregion
 
-                #region Command - Item Info
-                commands.CreateCommand("iteminfo")
-                    .Description("This command will return information of an Item. ```Usage: /iteminfo <ItemID>```")
-                    .Alias(new string[] { "ii", "itemdb" })
+                #region Command - Divine-Pride to rAthena Monster DB
+                #region ramob
+                commands.CreateCommand("ramob")
+                    .Description("This command will return information of a monster in rAthena's mob_db.txt format. ```Usage: /ramob <MonsterID>```")
                     .Parameter("arg", ParameterType.Required)
                     .Do(async (e) =>
                     {
@@ -211,14 +211,20 @@ namespace Discord_rAthenaBot
                         }
                         else
                         {
-                            string divinepride = "www.divine-pride.net/database/item/" + id;
-                            Process.Start(divinepride);
+                            Monster mob = DpService.GetMonster(id);
+                            if (mob == null)
+                            {
+                                await e.Channel.SendMessage("Can't retrieve monster info from divine-pride. Either mob-id doesn't exist or divine-pride is down.");
+                            }
+                            else
+                            {
+                                await e.Channel.SendMessage("`" + mob.ToString() + "`");
+                            }
                         }
-
                     });
                 #endregion
 
-                #region Command - Monster Info
+                #region Command - mobinfo
                 commands.CreateCommand("mobinfo")
                     .Description("This command will return information of a monster. ```Usage: /mobinfo <MonsterID>```")
                     .Alias(new string[] { "mi", "mobdb", "mobinfo" })
@@ -249,33 +255,35 @@ namespace Discord_rAthenaBot
                                     mob.stats.str, mob.stats.agi, mob.stats.vit, mob.stats.Int, mob.stats.dex, mob.stats.luk, mob.stats.attack["minimum"], mob.stats.attack["maximum"],
                                     mob.stats.defense, mob.stats.magicDefense, mob.stats.baseExperience, mob.stats.jobExperience, mob.stats.hit, mob.stats.flee, Monster.Idx2Race(mob.stats.race), Monster.Idx2Size(mob.stats.scale),
                                     "WIP", mob.stats.mvp == 1 ? "Yes" : "No")); // TODO : Implement Element
-                        }
+                            }
                         }
                     });
                 #endregion
+                #endregion
 
-                #region Command - Divine-Pride to rAthena Monster DB
-                commands.CreateCommand("ramob")
-                    .Description("This command will return information of a monster in rAthena's mob_db.txt format. ```Usage: /ramob <MonsterID>```")
+                #region Command - Divine-Pride to rAthena Item DB
+                commands.CreateCommand("raitem")
+                    .Alias(new string[] { "ii", "itemdb" })
+                    .Description("This command will return information of an item in rAthena's item_db.txt format. ```Usage: /raitem <Item ID>```")
                     .Parameter("arg", ParameterType.Required)
                     .Do(async (e) =>
                     {
-                        int id = Convert.ToInt32(e.Args[0]);
+                        int nameid = Convert.ToInt32(e.Args[0]);
                         await e.Channel.SendIsTyping();
-                        if (id <= 0)
+                        if (nameid <= 0)
                         {
                             await e.Channel.SendMessage(e.Command.Description);
                         }
                         else
                         {
-                            Monster mob = DpService.GetMonster(id);
-                            if (mob == null)
+                            Item item = DpService.GetItem(nameid);
+                            if (item == null)
                             {
-                                await e.Channel.SendMessage("Can't retrieve monster info from divine-pride. Either mob-id doesn't exist or divine-pride is down.");
+                                await e.Channel.SendMessage("Can't retrieve item info from divine-pride. Either item-id doesn't exist or divine-pride is down.");
                             }
                             else
                             {
-                                await e.Channel.SendMessage("`" + mob.ToAthenaFormat() + "`");
+                                await e.Channel.SendMessage("`" + item.ToString() + "`");
                             }
                         }
                     });

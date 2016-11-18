@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
+using System;
 
 namespace Discord_rAthenaBot.DivinePride
 {
@@ -23,10 +24,25 @@ namespace Discord_rAthenaBot.DivinePride
             {
                 return JsonConvert.DeserializeObject<Monster>(GetData("Monster", id));
             }
-            catch (WebException)
+            catch (Exception e)
             {
-                return null;
+                Console.WriteLine(e);
             }
+            return null;
+        }
+
+        public Item GetItem(int id)
+        {
+            try
+            {
+                string json_text = GetData("Item", id);
+                return JsonConvert.DeserializeObject<Item>(json_text);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return null;
         }
     }
 }
