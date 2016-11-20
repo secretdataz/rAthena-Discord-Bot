@@ -302,6 +302,11 @@ namespace Discord_rAthenaBot
                     {
                         await e.Channel.SendFile(@"img\aleos.gif");
                     });
+                commands.CreateCommand("akkarin")
+                    .Do(async (e) =>
+                    {
+                        await e.Channel.SendFile(@"img\akkarin.gif");
+                    });
                 #endregion
                 #endregion
 
