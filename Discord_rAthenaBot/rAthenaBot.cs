@@ -56,7 +56,7 @@ namespace Discord_rAthenaBot
 
                 discord = new DiscordClient(x =>
                 {
-                    x.LogLevel = LogSeverity.Info;
+                    x.LogLevel = LogSeverity.Warning;
                     x.LogHandler = Log;
                 });
 
@@ -87,6 +87,31 @@ namespace Discord_rAthenaBot
                 #endregion
 
                 #region List of Commands
+
+                #region Command - stats
+                commands.CreateCommand("stats")
+                    .Description("This command will return the stats of rAthena Discord. ```Usage: /stats```")
+                    .Alias(new string[] { "stat", "status" })
+                    .Parameter("args", ParameterType.Unparsed)
+                    .Do(async (e) =>
+                    {
+                        string msg = "**rAthena Discord Stat**:" + System.Environment.NewLine
+                                + "```"
+                                + "Region - " + e.Server.Region.Name + System.Environment.NewLine
+                                + System.Environment.NewLine
+                                + "Total Users - " + e.Channel.Server.Users.Where(x => x.IsBot == false).Count() + System.Environment.NewLine
+                                + System.Environment.NewLine
+                                + "Total Bots - " + e.Channel.Server.Users.Where(x => x.IsBot == true).Count() + System.Environment.NewLine
+                                + "Total Online Bots - " + e.Channel.Server.Users.Where(x => x.IsBot == true && x.Status != UserStatus.Offline).Count() + System.Environment.NewLine
+                                + "Total Offline Bots - " + e.Channel.Server.Users.Where(x => x.IsBot == true && x.Status == UserStatus.Offline).Count() + System.Environment.NewLine
+                                + System.Environment.NewLine
+                                + "Total Channels - " + e.Server.ChannelCount + System.Environment.NewLine
+                                + "Total Text Channels - " + e.Server.TextChannels.Count() + System.Environment.NewLine
+                                + "Total Voice Channels - " + e.Server.VoiceChannels.Count() + System.Environment.NewLine
+                                + "```";
+                        await e.Channel.SendMessage(msg);
+                    });
+                #endregion
 
                 #region Command - Search
                 commands.CreateCommand("search")
@@ -325,6 +350,8 @@ namespace Discord_rAthenaBot
                     try
                     {
                         await discord.Connect(Config.DiscordToken, TokenType.Bot);
+                        discord.SetGame("rAthena", GameType.Default, "www.rAthena.org");
+                        discord.SetStatus(UserStatus.DoNotDisturb);
                     }
                     catch (HttpException e)
                     {
