@@ -126,9 +126,9 @@ namespace Discord_rAthenaBot
                         }
                         else
                         {
-                            string query = String.Join("+", e.Args.ToList());
-                            string url = "cse.google.com/cse/publicurl?cx=009409555530237933087:hphsio1cods&q=" + query;
-                            await e.Channel.SendMessage("Search result: `" + String.Join(" ", e.Args.ToList()) + "`" + System.Environment.NewLine + "https://" + url);
+                            string query = String.Join("%20", e.Args.ToList());
+                            string url = "https://rathena.org/board/search/?&q=" + query;
+                            await e.Channel.SendMessage("Search result: `" + String.Join(" ", e.Args.ToList()) + "`" + System.Environment.NewLine  + url);
                             Process.Start(url);
                         }
                     });
@@ -319,7 +319,7 @@ namespace Discord_rAthenaBot
                 commands.CreateCommand("emistry")
                     .Do(async (e) =>
                     {
-                        await e.Channel.SendMessage("I am the Emperor!! Obey Me or Die!");
+                        await e.Channel.SendMessage("ZzzzZzzZzzZZZzzzzZZzzzzz...");
                         await e.Channel.SendFile( @"img\emistry.gif" );
                     });
                 commands.CreateCommand("aleos")
