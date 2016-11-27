@@ -69,7 +69,7 @@ namespace Discord_rAthenaBot
                         if (channel != null)
                         {
                             await channel.SendMessage("Hello " + e.User.Mention + ", welcome to " + Config.ServerName + " Discord." + Environment.NewLine +
-                                "Kindly read the " + e.Server.FindChannels(Config.Channels["Rules"], ChannelType.Text).FirstOrDefault().Mention + " before you start posting.Thank you.");
+                                "Kindly read the " + e.Server.FindChannels(Config.Channels["Rules"], ChannelType.Text).FirstOrDefault().Mention + " before you start posting. Thank you.");
                         }
                     }
                 };
