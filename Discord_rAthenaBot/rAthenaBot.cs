@@ -23,16 +23,22 @@ namespace Discord_rAthenaBot
         RSSConfiguration RSSConfig;
         DivinePrideService DpService;
 
-        long rssTick = DateTime.Now.Ticks;
+        Timer TimerRSS = new Timer();
+        long Tick_RSS_Support = DateTime.Now.Ticks;
+        long Tick_RSS_Server = DateTime.Now.Ticks;
 
         private void Log(object sender, LogMessageEventArgs e)
         {
-            Console.WriteLine(e.Message);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("[Log] " + e.Message);
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public void FatalError(string Message, int ExitCode = 1)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(Message);
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
             Environment.Exit(ExitCode);
@@ -52,11 +58,14 @@ namespace Discord_rAthenaBot
                 Console.WriteLine("Done reading configuration files.");
                 Console.Title = Config.ConsoleTitle;
 
-                DpService = new DivinePrideService { BaseUrl = Config.DivinePrideBaseUrl, ApiKey = Config.DivinePrideApiKey };
+                DpService = new DivinePrideService {
+                    BaseUrl = Config.DivinePrideBaseUrl,
+                    ApiKey = Config.DivinePrideApiKey
+                };
 
                 discord = new DiscordClient(x =>
                 {
-                    x.LogLevel = LogSeverity.Warning;
+                    x.LogLevel = LogSeverity.Info;
                     x.LogHandler = Log;
                 });
 
@@ -336,12 +345,11 @@ namespace Discord_rAthenaBot
                 #endregion
 
                 #region RSS Timer
-                Timer rssTimer = new Timer();
-                rssTimer.Interval = RSSConfig.RefreshInterval;
-                rssTimer.AutoReset = RSSConfig.AutoReset;
-                rssTimer.Enabled = RSSConfig.Enabled;
-                rssTimer.Elapsed += new ElapsedEventHandler(OnTriggerRSS);
-                rssTimer.Start();
+                TimerRSS.Interval = RSSConfig.RefreshInterval;
+                TimerRSS.AutoReset = RSSConfig.AutoReset;
+                TimerRSS.Enabled = RSSConfig.Enabled;
+                TimerRSS.Elapsed += new ElapsedEventHandler(OnCheckRSSFeed);
+                TimerRSS.Start();
                 #endregion
 
                 instance = this;
@@ -351,7 +359,7 @@ namespace Discord_rAthenaBot
                     {
                         await discord.Connect(Config.DiscordToken, TokenType.Bot);
                         discord.SetGame("rAthena", GameType.Default, "www.rAthena.org");
-                        discord.SetStatus(UserStatus.DoNotDisturb);
+                        discord.SetStatus(UserStatus.Online);
                     }
                     catch (HttpException e)
                     {
@@ -379,21 +387,23 @@ namespace Discord_rAthenaBot
         }
 
         #region Rich Site Summary 
-        private void OnTriggerRSS(object source, ElapsedEventArgs e)
+        private void OnCheckRSSFeed(object source, ElapsedEventArgs e)
         {
             discord.ExecuteAndWait(async () =>
             {
-                Channel channel = discord.FindServers(Config.ServerName).FirstOrDefault().FindChannels(Config.Channels["Support"],ChannelType.Text).FirstOrDefault();
-
-                if (channel != null)
+                TimerRSS.Stop();
+                try
                 {
-                    if (RSSConfig.Feeds.Count > 0)
-                    {
-                        List<Tuple<string, string, long>> newRSS = new List<Tuple<string, string, long>>();
-                        List<string> rssList = RSSConfig.Feeds;
+                    string message = string.Empty;
+                    #region Search for New Support RSS
+                    Channel supportChannel = discord.FindServers(Config.ServerName).FirstOrDefault().FindChannels(Config.Channels["Support"], ChannelType.Text).FirstOrDefault();
 
-                        #region Search for New RSS
-                        foreach (string rss in rssList)
+                    if (supportChannel != null && RSSConfig.SupportFeeds != null && RSSConfig.SupportFeeds.Count > 0)
+                    {
+                        List<Tuple<string, string, long>> SupportRSSList = new List<Tuple<string, string, long>>();
+                        List<string> SupportFeeds = RSSConfig.SupportFeeds;
+                        
+                        foreach (string rss in SupportFeeds)
                         {
                             XmlDocument doc = new XmlDocument();
                             doc.Load(rss);
@@ -401,38 +411,81 @@ namespace Discord_rAthenaBot
                             for (int i = 0; i < elemList.Count; i++)
                             {
                                 XmlNodeList node = elemList[i].ChildNodes;
-                                long timetick = DateTime.Parse(node[(byte)Constant.RSSItemType.PublishDate].InnerText).Ticks;
-                                if (timetick > rssTick)
+                                long timetick = DateTime.Parse(node[(byte)Constant.SupportFeed.PublishDate].InnerText).Ticks;
+                                if (timetick > Tick_RSS_Support)
                                 {
-                                    newRSS.Add(new Tuple<string, string, long>(
-                                        node[(byte)Constant.RSSItemType.Title].InnerText,
-                                        node[(byte)Constant.RSSItemType.Link].InnerText,
+                                    SupportRSSList.Add(new Tuple<string, string, long>(
+                                        node[(byte)Constant.SupportFeed.Title].InnerText,
+                                        node[(byte)Constant.SupportFeed.Link].InnerText,
                                         timetick));
                                 }
                             }
                         }
-                        #endregion
 
-                        #region Post RSS if found
-                        if (newRSS.Count > 0)
+                        if (SupportRSSList.Count > 0)
                         {
-                            await channel.SendIsTyping();
+                            await supportChannel.SendIsTyping();
 
-                            string msg = "**I've found " + newRSS.Count + " New Topic(s), anybody want to take a look at it? **";
-                            foreach (Tuple<string,string,long> rss in newRSS)
+                            message = "**I've found " + SupportRSSList.Count + " New Topic(s), anybody want to take a look at it? **";
+                            foreach (Tuple<string, string, long> rss in SupportRSSList)
                             {
-                                msg = msg + System.Environment.NewLine
-                                    //+ rss.Item1 + System.Environment.NewLine 
-                                    + rss.Item2 + System.Environment.NewLine; 
+                                message = message + System.Environment.NewLine
+                                        //+ rss.Item1 + System.Environment.NewLine 
+                                        + rss.Item2 + System.Environment.NewLine;
                             }
-                            await channel.SendMessage(msg);
-                            rssTick = DateTime.Now.Ticks;
+                            await supportChannel.SendMessage(message);
+                            Tick_RSS_Support = DateTime.Now.Ticks;
                         }
-                        #endregion
-
                     }
+                    #endregion
 
+                    #region Search for New Server RSS
+                    Channel serverChannel = discord.FindServers(Config.ServerName).FirstOrDefault().FindChannels(Config.Channels["ServerAds"], ChannelType.Text).FirstOrDefault();
+
+                    if (serverChannel != null && RSSConfig.ServerFeeds != null && RSSConfig.ServerFeeds.Count > 0)
+                    {
+                        List<Tuple<string, string, long>> ServerRSSList = new List<Tuple<string, string, long>>();
+                        List<string> ServerFeeds = RSSConfig.ServerFeeds;
+
+                        foreach (string rss in ServerFeeds)
+                        {
+                            XmlDocument doc = new XmlDocument();
+                            doc.Load(rss);
+                            XmlNodeList elemList = doc.GetElementsByTagName("item");
+                            for (int i = 0; i < elemList.Count; i++)
+                            {
+                                XmlNodeList node = elemList[i].ChildNodes;
+                                long timetick = DateTime.Parse(node[(byte)Constant.ServerFeed.PublishDate].InnerText).Ticks;
+                                if (timetick > Tick_RSS_Support)
+                                {
+                                    ServerRSSList.Add(new Tuple<string, string, long>(
+                                        node[(byte)Constant.ServerFeed.Title].InnerText,
+                                        node[(byte)Constant.ServerFeed.Link].InnerText,
+                                        timetick));
+                                }
+                            }
+                        }
+
+                        if (ServerRSSList.Count > 0)
+                        {
+                            await serverChannel.SendIsTyping();
+                            foreach (Tuple<string, string, long> rss in ServerRSSList)
+                            {
+                                message = rss.Item2 + System.Environment.NewLine;
+                                await serverChannel.SendMessage(message);
+                            }
+                            Tick_RSS_Server = DateTime.Now.Ticks;
+                        }
+                    }
+                    #endregion
                 }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Exception : " + ex.Message);
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                TimerRSS.Start();
             });
         }
         #endregion

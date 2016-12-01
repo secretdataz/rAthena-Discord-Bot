@@ -1,8 +1,8 @@
 ﻿{
     "Enabled": true,
     "AutoReset": true,
-    "RefreshInterval": 600000,
-    "Feeds": [
+    "RefreshInterval": 60000,
+    "SupportFeeds": [
         "https://rathena.org/board/forum/211-general-support.xml/",
         "https://rathena.org/board/forum/24-installation-support.xml/",
         "https://rathena.org/board/forum/30-scripting-support.xml/",
@@ -13,5 +13,11 @@
         "https://rathena.org/board/forum/19-client-side-support.xml/",
         "https://rathena.org/board/forum/214-third-party-support.xml/",
         "https://rathena.org/board/forum/22-linux-support.xml/"
+    ],
+    "ServerFeeds": [
+      "https://rathena.org/board/serverads/low-rates/?page=1&d=12&rss=1",
+      "https://rathena.org/board/serverads/mid-rates/?page=1&d=12&rss=1",
+      "https://rathena.org/board/serverads/high-rates/?page=1&d=12&rss=1",
+      "https://rathena.org/board/serverads/super-high-rates/?page=1&d=12&rss=1"
     ]
 }

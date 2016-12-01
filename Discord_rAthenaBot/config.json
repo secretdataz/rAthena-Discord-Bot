@@ -7,7 +7,8 @@
     "Channels": {
         "General": "general",
         "Support": "support",
-        "Rules": "rules"
+        "Rules": "rules",
+        "ServerAds": "server-ads"
     },
     "DivinePrideApiKey": "89fa90907f8749f1ffecdc47e9ec563e",
     "DivinePrideBaseUrl": "http://www.divine-pride.net/api/database/{1}/{2}?apiKey={0}"

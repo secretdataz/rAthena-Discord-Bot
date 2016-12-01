@@ -24,9 +24,11 @@ namespace Discord_rAthenaBot.DivinePride
             {
                 return JsonConvert.DeserializeObject<Monster>(GetData("Monster", id));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex);
+                Console.ForegroundColor = ConsoleColor.White;
             }
             return null;
         }
@@ -37,9 +39,11 @@ namespace Discord_rAthenaBot.DivinePride
             {
                 return JsonConvert.DeserializeObject<Item>(GetData("Item", id));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex);
+                Console.ForegroundColor = ConsoleColor.White;
             }
             return null;
         }

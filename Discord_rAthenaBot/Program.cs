@@ -16,7 +16,9 @@ namespace Discord_rAthenaBot
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Application already running. Please close the existing application.");
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadKey();
                 Environment.Exit(1);
