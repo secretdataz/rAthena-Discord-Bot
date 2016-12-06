@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.Net;
+using Discord_rAthenaBot.Commands.Script;
 using Discord_rAthenaBot.Const;
 using Discord_rAthenaBot.DivinePride;
 using Newtonsoft.Json;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Timers;
 using System.Xml;
 
@@ -18,12 +20,13 @@ namespace Discord_rAthenaBot
     {
         public static rAthenaBot instance { get; private set; }
         public Configuration Config { get; private set; }
+        List<ScriptCommand> scriptCommands;
         DiscordClient discord;
         CommandService commands;
         RSSConfiguration RSSConfig;
         DivinePrideService DpService;
 
-        Timer TimerRSS = new Timer();
+        System.Timers.Timer TimerRSS = new System.Timers.Timer();
         long Tick_RSS_Support = DateTime.Now.Ticks;
         long Tick_RSS_Server = DateTime.Now.Ticks;
 
@@ -342,6 +345,32 @@ namespace Discord_rAthenaBot
                         await e.Channel.SendFile(@"img\akkarin.gif");
                     });
                 #endregion
+
+                #region Command - Script command documentation
+                if (ProcessScriptCommands())
+                {
+                    commands.CreateCommand("script")
+                        .Description("View rAthena script command documentation.")
+                        .Parameter("name", ParameterType.Required)
+                        .Do(async (e) =>
+                        {
+                            ScriptCommand cmd = scriptCommands.FirstOrDefault(x => x.Name.Equals(e.Args[0], StringComparison.CurrentCultureIgnoreCase));
+                            if (cmd == null)
+                            {
+                                await e.Channel.SendMessage("Command not found.");
+                            }
+                            else
+                            {
+                                string desc = "```";
+                                foreach (string x in cmd.Descriptions)
+                                {
+                                    desc += x + Environment.NewLine;
+                                }
+                                await e.Channel.SendMessage(desc + "```");
+                            }
+                        });
+                }
+                #endregion
                 #endregion
 
                 #region RSS Timer
@@ -386,6 +415,39 @@ namespace Discord_rAthenaBot
             return string.Empty;
         }
 
+        private bool ProcessScriptCommands()
+        {
+            Console.WriteLine("Processing script_commands.txt");
+            ScriptCommandParser scp;
+            if (!File.Exists("script_commands.txt"))
+            {
+                Console.WriteLine("Downloading script_commands.txt from rAthena Git.");
+                scp = new ScriptCommandParser(new Uri(@"https://github.com/rathena/rathena/raw/master/doc/script_commands.txt"));
+            }
+            else
+            {
+                Console.WriteLine("script_commands.txt already exists.");
+                scp = new ScriptCommandParser(File.ReadAllLines("script_commands.txt"));
+            }
+            Console.Write("Reading file...");
+            while (!scp.ready)
+            {
+                Thread.Sleep(3000);
+                Console.Write(".");
+            }
+            Console.WriteLine();
+            if (!scp.Parse())
+            {
+                Console.WriteLine("Processing failed. Script command doc will be disabled.");
+                return false;
+            }
+            else
+            {
+                Console.WriteLine("Processed script commands.");
+                this.scriptCommands = scp.commands;
+                return true;
+            }
+        }
         #region Rich Site Summary 
         private void OnCheckRSSFeed(object source, ElapsedEventArgs e)
         {
