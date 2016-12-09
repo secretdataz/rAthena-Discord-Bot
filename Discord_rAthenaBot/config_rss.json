@@ -3,16 +3,7 @@
     "AutoReset": true,
     "RefreshInterval": 600000,
     "SupportFeeds": [
-        "https://rathena.org/board/forum/211-general-support.xml/",
-        "https://rathena.org/board/forum/24-installation-support.xml/",
-        "https://rathena.org/board/forum/30-scripting-support.xml/",
-        "https://rathena.org/board/forum/31-database-support.xml/",
-        "https://rathena.org/board/forum/35-source-support.xml/",
-        "https://rathena.org/board/forum/40-graphics-support.xml/",
-        "https://rathena.org/board/forum/21-web-support.xml/",
-        "https://rathena.org/board/forum/19-client-side-support.xml/",
-        "https://rathena.org/board/forum/214-third-party-support.xml/",
-        "https://rathena.org/board/forum/22-linux-support.xml/"
+      "https://rathena.org/board/rss/3-support-topics-feed.xml/"
     ],
     "ServerFeeds": [
       "https://rathena.org/board/serverads/low-rates/?page=1&d=12&rss=1",
