@@ -464,7 +464,7 @@ namespace Discord_rAthenaBot
                     {
                         List<Tuple<string, string, long>> SupportRSSList = new List<Tuple<string, string, long>>();
                         List<string> SupportFeeds = RSSConfig.SupportFeeds;
-                        
+
                         foreach (string rss in SupportFeeds)
                         {
                             XmlDocument doc = new XmlDocument();
@@ -518,7 +518,7 @@ namespace Discord_rAthenaBot
                             {
                                 XmlNodeList node = elemList[i].ChildNodes;
                                 long timetick = DateTime.Parse(node[(byte)Constant.ServerFeed.PublishDate].InnerText).Ticks;
-                                if (timetick > Tick_RSS_Support)
+                                if (timetick > Tick_RSS_Server)
                                 {
                                     ServerRSSList.Add(new Tuple<string, string, long>(
                                         node[(byte)Constant.ServerFeed.Title].InnerText,
