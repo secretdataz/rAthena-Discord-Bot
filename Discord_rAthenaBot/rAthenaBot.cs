@@ -544,7 +544,7 @@ namespace Discord_rAthenaBot
                 catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Exception : " + ex.Message);
+                    Console.WriteLine("[" + DateTime.Now.ToString() + "] Exception : " + ex.Message);
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 TimerRSS.Start();
