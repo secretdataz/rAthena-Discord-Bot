@@ -33,7 +33,7 @@ namespace Discord_rAthenaBot
         private void Log(object sender, LogMessageEventArgs e)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[Log] " + e.Message);
+            Console.WriteLine("[" + DateTime.Now.ToString() + "] Log - " + e.Message);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
