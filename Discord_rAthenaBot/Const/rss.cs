@@ -7,8 +7,7 @@
             Title = 0,
             Link = 1,
             Description = 2,
-            GUID = 3,
-            PublishDate = 4,
+            PublishDate = 3,
         }
 
         public enum ServerFeed : byte
@@ -16,8 +15,7 @@
             Title = 0,
             Link = 1,
             Description = 2,
-            GUID = 3,
-            PublishDate = 4,
+            PublishDate = 3,
         }
     }
 }

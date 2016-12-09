@@ -6,9 +6,6 @@
       "https://rathena.org/board/rss/3-support-topics-feed.xml/"
     ],
     "ServerFeeds": [
-      "https://rathena.org/board/serverads/low-rates/?page=1&d=12&rss=1",
-      "https://rathena.org/board/serverads/mid-rates/?page=1&d=12&rss=1",
-      "https://rathena.org/board/serverads/high-rates/?page=1&d=12&rss=1",
-      "https://rathena.org/board/serverads/super-high-rates/?page=1&d=12&rss=1"
+      "https://rathena.org/board/discover/11.xml/?member=241&key=1b4347233fcb9ef8a786d0facd264997"
     ]
 }
