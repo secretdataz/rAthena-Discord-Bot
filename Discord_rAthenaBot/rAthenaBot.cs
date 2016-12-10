@@ -502,43 +502,43 @@ namespace Discord_rAthenaBot
                     #endregion
 
                     #region Search for New Server RSS
-                    Channel serverChannel = discord.FindServers(Config.ServerName).FirstOrDefault().FindChannels(Config.Channels["ServerAds"], ChannelType.Text).FirstOrDefault();
+                    //Channel serverChannel = discord.FindServers(Config.ServerName).FirstOrDefault().FindChannels(Config.Channels["ServerAds"], ChannelType.Text).FirstOrDefault();
 
-                    if (serverChannel != null && RSSConfig.ServerFeeds != null && RSSConfig.ServerFeeds.Count > 0)
-                    {
-                        List<Tuple<string, string, long>> ServerRSSList = new List<Tuple<string, string, long>>();
-                        List<string> ServerFeeds = RSSConfig.ServerFeeds;
+                    //if (serverChannel != null && RSSConfig.ServerFeeds != null && RSSConfig.ServerFeeds.Count > 0)
+                    //{
+                    //    List<Tuple<string, string, long>> ServerRSSList = new List<Tuple<string, string, long>>();
+                    //    List<string> ServerFeeds = RSSConfig.ServerFeeds;
 
-                        foreach (string rss in ServerFeeds)
-                        {
-                            XmlDocument doc = new XmlDocument();
-                            doc.Load(rss);
-                            XmlNodeList elemList = doc.GetElementsByTagName("item");
-                            for (int i = 0; i < elemList.Count; i++)
-                            {
-                                XmlNodeList node = elemList[i].ChildNodes;
-                                long timetick = DateTime.Parse(node[(byte)Constant.ServerFeed.PublishDate].InnerText).Ticks;
-                                if (timetick > Tick_RSS_Server)
-                                {
-                                    ServerRSSList.Add(new Tuple<string, string, long>(
-                                        node[(byte)Constant.ServerFeed.Title].InnerText,
-                                        node[(byte)Constant.ServerFeed.Link].InnerText,
-                                        timetick));
-                                }
-                            }
-                        }
+                    //    foreach (string rss in ServerFeeds)
+                    //    {
+                    //        XmlDocument doc = new XmlDocument();
+                    //        doc.Load(rss);
+                    //        XmlNodeList elemList = doc.GetElementsByTagName("item");
+                    //        for (int i = 0; i < elemList.Count; i++)
+                    //        {
+                    //            XmlNodeList node = elemList[i].ChildNodes;
+                    //            long timetick = DateTime.Parse(node[(byte)Constant.ServerFeed.PublishDate].InnerText).Ticks;
+                    //            if (timetick > Tick_RSS_Server)
+                    //            {
+                    //                ServerRSSList.Add(new Tuple<string, string, long>(
+                    //                    node[(byte)Constant.ServerFeed.Title].InnerText,
+                    //                    node[(byte)Constant.ServerFeed.Link].InnerText,
+                    //                    timetick));
+                    //            }
+                    //        }
+                    //    }
 
-                        if (ServerRSSList.Count > 0)
-                        {
-                            await serverChannel.SendIsTyping();
-                            foreach (Tuple<string, string, long> rss in ServerRSSList)
-                            {
-                                message = rss.Item2 + System.Environment.NewLine;
-                                await serverChannel.SendMessage(message);
-                            }
-                            Tick_RSS_Server = DateTime.Now.Ticks;
-                        }
-                    }
+                    //    if (ServerRSSList.Count > 0)
+                    //    {
+                    //        await serverChannel.SendIsTyping();
+                    //        foreach (Tuple<string, string, long> rss in ServerRSSList)
+                    //        {
+                    //            message = rss.Item2 + System.Environment.NewLine;
+                    //            await serverChannel.SendMessage(message);
+                    //        }
+                    //        Tick_RSS_Server = DateTime.Now.Ticks;
+                    //    }
+                    //}
                     #endregion
                 }
                 catch (Exception ex)
