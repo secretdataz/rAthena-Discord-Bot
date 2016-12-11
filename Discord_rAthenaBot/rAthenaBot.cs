@@ -141,7 +141,6 @@ namespace Discord_rAthenaBot
                             string query = String.Join("%20", e.Args.ToList());
                             string url = "https://rathena.org/board/search/?&q=" + query;
                             await e.Channel.SendMessage("Search result: `" + String.Join(" ", e.Args.ToList()) + "`" + System.Environment.NewLine  + url);
-                            Process.Start(url);
                         }
                     });
                 #endregion
