@@ -5,7 +5,7 @@
     "PrefixChar": "/",
     "AllowMentionPrefix": true,
     "Channels": {
-        "General": "general",
+        "General": "off-topic",
         "Support": "support",
         "Rules": "rules",
         "ServerAds": "server-ads"
